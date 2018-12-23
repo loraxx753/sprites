@@ -1,0 +1,48 @@
+/* Mobile first! Meaning mobile "forward". */
+
+:root {
+    --two-columns: 100%;
+}
+@media screen and (min-width: 800px) {
+    :root {
+        --two-columns: 50% 50%;
+    }
+}
+
+:root {
+    --three-columns: 100%;
+}
+
+@media screen and (min-width: 600px) {
+    :root {
+        --three-columns: 50% 50%;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    :root {
+        --three-columns: 33% 33% 33%;
+    }
+}
+
+:root {
+    --four-columns: 100%;
+}
+
+@media screen and (min-width: 600px) {
+    :root {
+        --four-columns: 50% 50%;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    :root {
+        --four-columns: 33% 33% 33%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    :root {
+        --four-columns: 25% 25% 25% 25%;
+    }
+}

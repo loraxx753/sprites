@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css?family=Amatic+SC|Josefin+Sans');
+@import url('./pallettes/pantone.css');
+
+/* https://clrs.cc/ */
+
+:root {
+    /* --color-primary: #2164f3;
+    --color-secondary: #ff6600;
+    --color-gray: #6f6f6f;
+    --color-silver: #ebebeb;
+    --color-white: #ffffff;
+    --color-blue: #0000cc;
+    --color-light-blue: #99ccff;
+    --color-yellow: #ffb100;
+    --color-purple: #551a8b;
+    --color-violet: #cd29c0;
+    --color-green: #008040; */
+    
+    --color-blue--rgb: 0, 0, 204;
+    --color-light-blue--rgb: 153, 204, 255;
+    --color-purple--rgb: 85, 26, 139;
+    --color-violet--rgb: 205, 41, 192;
+    --color-green--rgb: 0, 128, 64;
+    --color-yellow--rgb: 255, 177, 0;
+
+    --font-color: #494949;
+    --header-font: "Josefin Sans",Arial,sans-serif;
+    --content-font: "Amatic SC",Arial,sans-serif;
+    --mobile-breakpoint: 720px;
+    --max-page-width: 90vw;
+    --canvas-height: 85vh;
+}

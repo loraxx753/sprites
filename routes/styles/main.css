@@ -1,0 +1,10 @@
+@import url('/_assets/styles/theme.css');
+@import url('/_assets/styles/base.css');
+@import url('/_assets/styles/pallettes/pantone.css');
+
+
+canvas {
+    /* width: var(--max-page-width);
+    height: var(--canvas-height);
+    background: black; */
+}
