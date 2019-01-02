@@ -3,13 +3,43 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Thoth</title>
+    <title>APD Universe</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" />
     <script type="module" src="/scripts/main.js"></script>
 </head>
 <body>
-    <h1>APD Universe</h1>
-    <canvas width="1200" height="600"></canvas>
+    <dialog-background>
+        <dialog open>
+            <form id="uploadPhoto">
+                <h2>Satellite Image Color Banding</h2>
+                <p hidden>How many color bands are we talking here?</p>
+                <label id="bands" hidden>
+                    <input type="range" list="tickmarks" value="0" step="3" max="12" /><span contenteditable>0</span>
+                    <datalist id="tickmarks">
+                        <option value="0">
+                        <option value="3">
+                        <option value="6">
+                        <option value="9">
+                        <option value="12">
+                    </datalist>
+                </label>
+                <p id="colorBands"></p>
+                <label>Upload Image:
+                    <input type="file">
+                </label>
+                <input type="submit" value="Here Goes Nothing" />
+            </form>
+            <img-stats hidden>
+                <p>Pixel Rows: <span id="rows"></span></p>
+                <p>Pixel Columns: <span id="columns"></span></p>
+                <p>Resolution: <span id="resolution"></span></p>
+                <p>Total Pixels: <span class="totalCount">0</span></p>
+                <p>Processing Pixels</p>
+                <p class="currentCount">0</p>
+            </img-stats>
+            <color-swatches></color-swatches>
+        </dialog>
+    </dialog-background>
 </body>
 </html>

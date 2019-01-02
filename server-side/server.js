@@ -4,7 +4,7 @@ require('isomorphic-fetch');
 const [http, fs, path, url, mimeTypes] = [require('http'), require('fs-extra'), require('path'), require('url'), require('./mimeTypes.js')] // ./mimeTypes is just an object. Go look real quick.
 const parser = require('url')
 // Without this semi-colon in front, this would try to run [require('http') ...]()
-;(async (port) => server(port))(3000) // A compacted self-calling function
+;(async (port) => server(port))(9000) // A compacted self-calling function
 
 /* 
     `server(port)` is called before it's defined, so the function  a declaration and not an expression (2)
@@ -30,10 +30,12 @@ async function server(port) {
                 })
         */
 
+        let content;
+
         switch (url.pathname) {
             case '/':
                 // Same with this. instead of a callback function, await makes it return the value.
-                const content =  await fs.readFile(`./routes/index.html`)
+                content =  await fs.readFile(`./routes/index.html`)
                 response.writeHead(200, { 'Content-Type': 'text/html' });
                 response.end(content, 'utf-8');
                 break;
