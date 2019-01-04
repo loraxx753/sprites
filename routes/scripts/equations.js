@@ -53,3 +53,16 @@ export const rgb2hsv = color => {
 
     return { hue, saturation, value }
 }
+
+export function rgb2hex(rgb, noHash = false) {
+    if(!noHash) return `#${Object.values(rgb).map(n => n.toString(16).padStart(2, '0')).join('')}`
+    else return `${Object.values(rgb).map(n => n.toString(16).padStart(2, '0')).join('')}`
+}
+
+export function hex2rgb(hex) {
+    let [match, red, green, blue] = hex.replace('#', '').match(/([a-z0-9]{2})([a-z0-9]{2})([a-z0-9]{2})/i)
+    red = parseInt(red, 16)
+    green = parseInt(green, 16)
+    blue = parseInt(blue, 16)
+    return {red, green, blue}
+}

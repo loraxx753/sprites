@@ -1,15 +1,71 @@
 import { parsePixels } from './functions.js'
 import { colors } from './constants.js';
+import { hex2rgb, rgb2hex } from './equations.js'
 
 (async () => {
-    // const res = colorDifference(colors.yellow, colors.blue)
-    // console.log(res)
-    let processed = 0
+    
+    document.getElementById('key-color').addEventListener('submit', (e) => {
+        e.preventDefault()
+        const keyColor = e.target.querySelector('input[type="color"]').value
+        parseColors(document.querySelector('apd-sprites img'))
+        // parseEnvironment({ key:keyColor })
+    })
+})()
+
+async function parseEnvironment(settings) {
+    const [canvas, img] = [document.createElement('canvas'), document.createElement('img')]
+
+    img.src = "_assets/sprites/spritesheet/environment.png"
+
+    img.onload = async () => {
+        document.body.appendChild(img)
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+        document.body.removeChild(img)
+        document.querySelector('apd-sprites[environement]').innerHTML = ''
+        document.querySelector('apd-sprites[environement]').appendChild(canvas)
+        
+
+        const sequence = parsePixels(canvas, settings);
+        const { pixels, rows, columns, resolution } = sequence.next().value
+
+        let { value, done } = sequence.next()
+        while(!done) {
+            let { value:nextValue, done:nextDone } = sequence.next()
+            value = nextValue
+            done = nextDone
+        }
+
+
+    }
+}
+
+async function parseColors(img) {
+    const key = '#383c3d'
+    const canvas = document.createElement('canvas')
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+    document.querySelector('apd-sprites').removeChild(document.querySelector('apd-sprites img'))
+    document.querySelector('apd-sprites').appendChild(canvas)
+    const sequence = parsePixels(canvas, img, { key });
+    let { value, done } = sequence.next()
+    let count = 0
+    while(!done) {
+        let { value:nextValue, done:nextDone } = sequence.next()
+        value = nextValue
+        done = nextDone
+    }
+    console.log("done")
+}
+
+async function parseOnlyColors() {
     const [canvas, overlay, img] = [document.createElement('canvas'), document.createElement('canvas'), document.createElement('img')]
 
-    // img.src = "_assets/data/example.png"
+    img.src = "_assets/sprites/spritesheet/colors.png"
 
-    img.onload = () => {
+    img.onload = async () => {
         document.body.appendChild(img)
         canvas.width = img.width;
         canvas.height = img.height;
@@ -17,112 +73,31 @@ import { colors } from './constants.js';
         overlay.height = canvas.height
         canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
         document.body.removeChild(img)
-        document.body.appendChild(overlay)
-        document.body.appendChild(canvas)
+        // document.body.appendChild(overlay)
+        // document.body.appendChild(canvas)
 
         const sequence = parsePixels(canvas, overlay, img);
         const { pixels, rows, columns, resolution } = sequence.next().value
-        const [currentCount, totalCount] = [ document.querySelectorAll('.currentCount'), document.querySelectorAll('.totalCount') ]
-        const [rowsElement, columnsElement, resolutionElement] = [ document.querySelector('#rows'), document.querySelector('#columns'), document.querySelector('#resolution')]
-        totalCount.forEach(el => el.innerHTML = pixels.toLocaleString())
-        rowsElement.innerHTML = rows.toLocaleString()
-        columnsElement.innerHTML = columns.toLocaleString()
-        resolutionElement.innerHTML = resolution
-
-
-        const { value, done } = sequence.next()
-        if(done) {
-            window.clearInterval(intvl)
-        }
-        processed++
-        updatePreview(value)
-        currentCount.forEach(el => el.innerHTML = processed.toLocaleString())
-        
-        
-        
-        
-        
-
-        const intvl = window.setInterval(async () => {
-            const { value, done } = sequence.next()
-            // console.log(value, done)
-            if(done) {
-                window.clearInterval(intvl)
-            }
-            // progress.value = value
-            processed++
-            updatePreview(value)
-            currentCount.forEach(el => el.innerHTML = processed.toLocaleString())
-            // currentCount.innerHTML = value.toLocaleString()
-        }, 1)
-    }
-
-
-    document.querySelector('#bands > input').addEventListener('input', (e) => {
-        document.querySelector('#bands > span').textContent = e.target.value
-        let colorBands = ''
-        switch (e.target.value) {
-            case '3':
-                colorBands = "Red, Green, Blue"
-                break;
-            case '6':
-                colorBands = "Red, Orange, Yellow, Green, Blue, Violet"
-                break;
-            case '9':
-                colorBands = "Nine Color Bands"
-                break;
-            case '12':
-                colorBands = "Twelve Color Bands"
-                break;
+        const colorsUsed = [];
+        let { value, done } = sequence.next()
+        let count = 0
+        while(!done) {
+            let found = false
+            const rgbCss = `#${value.red.toString(16)}${value.green.toString(16)}${value.blue.toString(16)}`
+            colorsUsed.find(css => {
+                if(rgbCss == css) found = true
+            })
+            if(!found) colorsUsed.push(rgbCss)
+            count++
+            let { value:nextValue, done:nextDone } = sequence.next()
+            value = nextValue
+            done = nextDone
         }
 
-        document.querySelector('#colorBands').innerHTML = colorBands
-
-    })
-    document.querySelector('#bands > span').addEventListener('input', (e) => {
-        document.querySelector('#bands > input').value = e.target.textContent
-    })
-
-    document.querySelector('#uploadPhoto').addEventListener('submit', e => {
-        e.preventDefault()
-        var file = e.target.querySelector('input[type=file]').files[0];
-        var reader  = new FileReader();
-
-        reader.addEventListener("load", function () {
-            img.src = reader.result;
-        }, false);
-      
-        if (file) {
-          reader.readAsDataURL(file);
-          document.querySelector('img-stats').removeAttribute('hidden')
-          e.target.toggleAttribute('hidden')
+        for(let colorUsed of colorsUsed) {
+            const div = document.createElement('div')
+            div.style=`width:100px; height: 100px;background-color: ${colorUsed}`
+            document.getElementsByTagName('color-palette')[0].appendChild(div)
         }
-      
-    })
-
-    for(let colorName in colors ) {
-        const swatch = colors[colorName]
-        const div = document.createElement('div')
-        div.innerHTML = `<p><span class="swatch ${colorName}" style="background-color: rgb(${swatch.red}, ${swatch.green}, ${swatch.blue})"></span><br/><span class="totals">0</span></p>`
-        document.querySelector('color-swatches').appendChild(div)
     }
-    // document.querySelector('color-swatches')
-
-})()
-
-
-function updatePreview({red, green, blue, ...colorInformation}) {
-    const previewExists = document.querySelector('color-preview')
-    if(previewExists) {
-        previewExists.parentElement.removeChild(previewExists)
-    }
-    
-    const preview = document.createElement('color-preview')
-    const swatch = document.createElement('color-swatch')
-
-    swatch.style=`background-color: rgb(${red}, ${green}, ${blue});`
-
-    preview.appendChild(swatch)
-    document.querySelector('dialog').appendChild(preview)
-
 }

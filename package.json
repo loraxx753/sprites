@@ -11,8 +11,5 @@
   "author": "",
   "license": "ISC",
   "dependencies": {},
-  "devDependencies": {
-    "fs-extra": "^7.0.1",
-    "isomorphic-fetch": "^2.2.1"
-  }
+  "devDependencies": {}
 }
